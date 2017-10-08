@@ -11,9 +11,8 @@ board = [[0]*8 for i in range(8)]
 
 graph=Graphics(600, 504,board)
 b=Board(board,graph)
-b2=SimpleBoard(board)
-p1=Human(b,graph,True,b2)
-p2=Human(b,graph,False,b2)
+p1=Human(b,graph,True)
+p2=Human(b,graph,False)
 g=Game(p1,p2,b,graph)
 
 

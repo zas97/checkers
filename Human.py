@@ -4,11 +4,11 @@ from sys import exit
 
 class Human:
 
-    def __init__(self,board,graphics,isWhite,b2):
+    def __init__(self,board,graphics,isWhite):
         self.graphics=graphics
         self.board=board
         self.isWhite=isWhite
-        self.simpleBoard=b2
+
 
     def getMove(self):
         done=False
@@ -36,8 +36,7 @@ class Human:
                         moveFrom=(x,y)
                         self.graphics.selectPiece(moveFrom)
                         self.graphics.highlight(self.board.posiblePlaysPiece(moveFrom, self.isWhite))
-        #return (moveFrom,moveTo)
-        self.simpleBoard.play([(moveFrom,moveTo)])
+        return (moveFrom,moveTo)
 
 
 
