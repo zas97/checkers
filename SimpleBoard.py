@@ -13,16 +13,17 @@ class SimpleBoard:
                         self.board[i][j] = -1
 
 
-    def assign(self,pos,val):
-        self.subBuffer.append((pos,self.getPiece(pos)))
+    def assign(self,pos,val,memorize=True):
+        if memorize:
+            self.subBuffer.append((pos,self.getPiece(pos)))
         self.board[pos[0]][pos[1]]=val
 
     def getPiece(self,pos):
         return self.board[pos[0]][pos[1]]
 
     def mid(self,pos1,pos2):
-        x=(pos1[0]+pos2[0])/2
-        y=(pos1[1]+pos2[1])/2
+        x=int((pos1[0]+pos2[0])/2)
+        y=int((pos1[1]+pos2[1])/2)
         return (x,y)
 
     def isMove(self,a,b):
@@ -31,8 +32,10 @@ class SimpleBoard:
 
     def undo(self):
         subBuffer=self.buffer.pop()
-        for i in subBuffer:
-            self.assign(i[0],i[1])
+
+        for i in reversed(subBuffer):
+
+            self.assign(i[0],i[1],memorize=False)
 
 
     def play(self,moves):
@@ -51,26 +54,22 @@ class SimpleBoard:
                 self.assign(moveTo,aux)
         self.buffer.append(self.subBuffer)
 
-    def jumpSequence(self,jump):
-        self.play([jump])
-        self.posibleJumps(jump[1])
 
 
-    def generateSequences(self,moves,k,seq):
-        self.play(k)
-        seq.append(k)
-        posibleJumps=self.posibleJumps(k[1])
+    def generateSequences(self,moves,move,seq):
+        print(move)
+        self.play(move)
+        seq.append(move[0])
+        posibleJumps=self.posibleJumps(move[0][1])
         if posibleJumps==[]:
             moves.append(seq)
+            self.undo()
             return
         for i in posibleJumps:
-            aux=[]
-            for i in seq:
-                aux.append(i)
-            self.generateSequences(moves,i,seq)
-            seq=[]
-            for i in aux:
-                seq.append(i)
+            aux=[(move[0][1],i)]
+            self.generateSequences(moves,aux,seq)
+        self.undo()
+
 
 
     def allMoves(self,white):
@@ -80,8 +79,9 @@ class SimpleBoard:
                 if (white and self.board[i][j] > 0) or (not white and self.board[i][j] < 0):
                     jump=self.posibleJumps((i,j))
                     for k in jump:
+                        aux=[((i,j),(k))]
                         seq=[]
-                        self.generateSequences(moves,k,seq)
+                        self.generateSequences(moves,aux,seq)
         if not moves==[]:
             return moves
         for i in range(0, 8):
@@ -89,7 +89,8 @@ class SimpleBoard:
                 if (white and self.board[i][j] > 0) or (not white and self.board[i][j] < 0):
                     move=self.posibleMoves((i,j))
                     for k in move:
-                        moves.append([k])
+                        moves.append([(((i,j),k))])
+        return moves
 
 
     def posibleJumps(self,pos):
@@ -121,6 +122,14 @@ class SimpleBoard:
 
 
         return posibleJumps
+
+    def canJump(self,posMid,posTo,piece):
+        if piece>0:
+            return self.insideBoard(posTo) and self.board[posTo[0]][posTo[1]] == 0 and self.board[posMid[0]][posMid[1]] < 0
+        elif piece < 0:
+            return self.insideBoard(posTo) and self.board[posTo[0]][posTo[1]] == 0 and self.board[posMid[0]][
+                                                                                           posMid[1]] > 0
+        return False
 
     def posibleMoves(self,pos):
         posy=pos[0]
