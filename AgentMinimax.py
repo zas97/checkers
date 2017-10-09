@@ -17,6 +17,8 @@ class AgentMinimax:
                 return r
             return -r
         moves=self.board.allMoves(white)
+        if len(moves)<=2:
+            profundity+=1
         bestMove=None
         m=-40
         for i in moves:
