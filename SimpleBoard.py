@@ -13,6 +13,13 @@ class SimpleBoard:
                         self.board[i][j] = -1
 
 
+    def evaluate(self):
+        r=0
+        for i in range(0,8):
+            for j in range(0,8):
+                r+=self.board[i][j]
+        return r
+
     def assign(self,pos,val,memorize=True):
         if memorize:
             self.subBuffer.append((pos,self.getPiece(pos)))
