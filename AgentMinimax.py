@@ -12,12 +12,12 @@ class AgentMinimax:
 
     def negamax(self,profundity,white):
         if profundity==0:
-            r=self.board.evalute()
+            r=self.board.evaluate()
             if white:
                 return r
             return -r
         moves=self.board.allMoves(white)
-        if len(moves)<=2:
+        if len(moves)==1:
             profundity+=1
         bestMove=None
         m=-40

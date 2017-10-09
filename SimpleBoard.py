@@ -11,6 +11,18 @@ class SimpleBoard:
                         self.board[i][j] = 1
                     elif i >= 5:
                         self.board[i][j] = -1
+        self.weightBoard=[[0]*8 for i in range(8)]
+        self.initWeightBoard()
+
+    def initWeightBoard(self):
+        for i in range(0,8):
+            for j in range(0,8):
+                aux=min(i,j)
+                aux=min(aux,7-i)
+                aux=min(aux,7-j)
+                self.weightBoard[i][j]=4-aux
+        print(self.weightBoard)
+
 
 
     def evaluate(self):
@@ -18,6 +30,10 @@ class SimpleBoard:
         for i in range(0,8):
             for j in range(0,8):
                 r+=self.board[i][j]
+                if abs(self.board[i][j])==1:
+                    r+=(self.weightBoard[i][j]*self.board[i][j])/8
+
+
         return r
 
     def assign(self,pos,val,memorize=True):
@@ -64,7 +80,6 @@ class SimpleBoard:
 
 
     def generateSequences(self,moves,move,seq):
-        print(move)
         self.play(move)
         seq.append(move[0])
         posibleJumps=self.posibleJumps(move[0][1])

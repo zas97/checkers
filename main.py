@@ -4,6 +4,7 @@ from Player import*
 from Game import*
 from Human import*
 from AgentMinimax import*
+from SimpleBoard import*
 import time
 
 board = [[0]*8 for i in range(8)]
